@@ -5,16 +5,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
+          
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
           channel: 'stable'
+
+      # 1. Создаем стандартный проект Flutter (чтобы появилась папка android)
+      - run: flutter create --project-name osint_app .
+      
+      # 2. Удаляем стандартный main.dart (чтобы он не мешал нашему)
+      - run: rm lib/main.dart
+      
+      # 3. Копируем наш код
+      - run: cp -r .github/../lib .  # Наш код уже в репозитории, он перезапишет стандартный
+      
+      # 4. Скачиваем зависимости и собираем
       - run: flutter pub get
       - run: flutter build apk --release
+      
       - uses: actions/upload-artifact@v4
         with:
           name: osint-apk
