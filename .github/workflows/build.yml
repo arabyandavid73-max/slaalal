@@ -16,16 +16,11 @@ jobs:
           flutter-version: '3.22.0'
           channel: 'stable'
 
-      # 1. Создаем стандартный проект Flutter (чтобы появилась папка android)
       - run: flutter create --project-name osint_app .
       
-      # 2. Удаляем стандартный main.dart (чтобы он не мешал нашему)
-      - run: rm lib/main.dart
-      
-      # 3. Копируем наш код
-      - run: cp -r .github/../lib .  # Наш код уже в репозитории, он перезапишет стандартный
-      
-      # 4. Скачиваем зависимости и собираем
+      # Мы удалили строку rm lib/main.dart, потому что нам нужен наш main.dart
+      # И удалили cp, потому что файл уже на месте.
+
       - run: flutter pub get
       - run: flutter build apk --release
       
