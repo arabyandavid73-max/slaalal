@@ -1,5 +1,5 @@
 name: Build APK
-on: [push]
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,14 +13,25 @@ jobs:
           
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
           channel: 'stable'
-
+          
+      # 1. Создаем проект (появится папка android)
       - run: flutter create --project-name osint_app .
       
-      # Мы удалили строку rm lib/main.dart, потому что нам нужен наш main.dart
-      # И удалили cp, потому что файл уже на месте.
-
+      # 2. Разрешаем HTTP-трафик (чтобы APK мог достучаться до 127.0.0.1:5000)
+      - name: Enable HTTP
+        run: |
+          mkdir -p android/app/src/main/res/xml
+          cat > android/app/src/main/res/xml/network_security_config.xml <<EOF
+          <?xml version="1.0" encoding="utf-8"?>
+          <network-security-config>
+              <base-config cleartextTrafficPermitted="true" />
+          </network-security-config>
+          EOF
+          
+          # Вставляем атрибуты в манифест
+          sed -i 's/<application/<application android:usesCleartextTraffic="true" android:networkSecurityConfig="@xml\/network_security_config"/' android/app/src/main/AndroidManifest.xml
+          
       - run: flutter pub get
       - run: flutter build apk --release
       
