@@ -37,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     
     try {
       final res = await http.post(
-        Uri.parse('http://127.0.0.1:5000/search'),
+        Uri.parse('http://192.168.1.4:5000/search'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'query': _controller.text.trim()}),
       ).timeout(const Duration(seconds: 60));
