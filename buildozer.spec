@@ -9,9 +9,12 @@ requirements = python3,kivy
 orientation = portrait
 fullscreen = 0
 android.permissions = READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
-android.api = 30
+android.api = 34
 android.minapi = 21
 android.archs = arm64-v8a
+android.accept_sdk_license = True
+android.skip_update = False
+android.allow_backup = True
 
 [buildozer]
 log_level = 2
